@@ -16,8 +16,7 @@ def parse(text):
         if line.startswith("SB:"):
             line = line.strip("SB:")
             sb = True
-        num, name = line.split(" ", 1)
-        card_list.append((num, name, sb))
+        card_list.append(line)
     return (deck_name, card_list)
 
 
@@ -34,7 +33,7 @@ def main(text):
     #    set_db = json.load(f)
     set_db = db_gen.main("/home/swartzcr/Documents/coding/deckmaker/CCGHQ MTG Pics/Fulls/Base and Expansion Sets")
     for card in card_list:
-        num, name, sb = card
+        name= card
         card_set = set_db[name]
         image_path = "".join([cwd,"/",CARD_DIR,"/",card_set,"/",name,".full.jpg"])
         # get the size of the existant card image
@@ -47,12 +46,8 @@ def main(text):
         text_size = str(int(resx)/24)
         # For each iteration of card generate an image with proper padding
         # as well as deck name and 1/# text
-        for i in range(int(num)):
-            if sb == False:
-                call_list = ["convert", image_path, "-pointsize", text_size, "-fill", "white", "-gravity", "South", "-draw", "text 0,"+up+" '%s %s/%s'" %(deck_name,i+1, num ), "-bordercolor", "Black", "-border", "%sx%s" %(side, side), nwd+"/"+name+str(i)+".jpg"]
-            if sb == True:
-                call_list = ["convert", image_path, "-pointsize", text_size, "-fill", "white", "-gravity", "South", "-draw", "text 0,"+up+" '%s %s/%s - SB'" %(deck_name, i+1, num), "-bordercolor", "Black", "-border", "%sx%s" %(side, side),  nwd+"/sb"+name+str(i)+".jpg"]
-            subprocess.call(call_list)
+        call_list = ["convert", image_path, "-pointsize", text_size, "-fill", "white", "-gravity", "South", "-draw", "text 0,"+up+" '%s' " %(deck_name), "-bordercolor", "Black", "-border", "%sx%s" %(side, side), nwd+"/"+name+".jpg"]
+        subprocess.call(call_list)
 
 
 if __name__ == '__main__':
